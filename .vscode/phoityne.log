@@ -1,0 +1,10 @@
+2021-07-15 21:14:04 [ThreadId 15] ERROR phoityne - ghci launch error. <file descriptor: 62>: hPutChar: resource vanished (Broken pipe)
+
+2021-07-15 21:14:04 [ThreadId 15] ERROR phoityne - [disconnectRequestHandler] ghci not started.
+2021-07-15 21:21:20 [ThreadId 15] ERROR phoityne - "error: \8226 Variable not in scope: docker \8226 Perhaps you meant \8216S.socket\8217 (imported from Network.Socket)"
+2021-07-15 21:22:22 [ThreadId 15] ERROR phoityne - "error: Variable not in scope: runner"
+2021-07-15 21:22:29 [ThreadId 15] ERROR phoityne - "error: \8226 Variable not in scope: expected \8226 Perhaps you meant \8216Aeson.Types.unexpected\8217 (imported from Data.Aeson.Types)"
+2021-07-15 21:22:33 [ThreadId 15] ERROR phoityne - "error: \8226 Variable not in scope: expected \8226 Perhaps you meant \8216Aeson.Types.unexpected\8217 (imported from Data.Aeson.Types)"
+2021-07-15 21:22:35 [ThreadId 15] ERROR phoityne - "error: \8226 Variable not in scope: expected \8226 Perhaps you meant \8216Aeson.Types.unexpected\8217 (imported from Data.Aeson.Types)"
+2021-07-15 21:22:36 [ThreadId 15] ERROR phoityne - "\"extractSourcePosition\" (line 1, column 1):\nunexpected end of input\nexpecting \"Stopped at \" or \"Stopped in \" [INPUT]"
+2021-07-15 21:22:36 [ThreadId 15] ERROR phoityne - [disconnectRequestHandler] ghci quit error. <file descriptor: 62>: hPutChar: resource vanished (Broken pipe)
