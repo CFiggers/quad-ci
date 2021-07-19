@@ -12,6 +12,7 @@ import qualified Data.Aeson.Types as Aeson.Types
 import qualified Data.Yaml as Yaml
 import qualified Network.HTTP.Simple as HTTP
 import qualified RIO.NonEmpty.Partial as NonEmpty.Partial
+import qualified RIO.Text as Text
 
 createCloneStep :: JobHandler.CommitInfo -> Step
 createCloneStep info = Step
@@ -40,12 +41,20 @@ fetchRemotePipeline info = do
 parsePushEvent :: ByteString -> IO JobHandler.CommitInfo
 parsePushEvent body = do
     let parser = Aeson.withObject "github-webhook" $ \event -> do
+            branch <- event .: "ref" <&> \ref ->
+                Text.dropPrefix "refs/heads/" ref
+            
             commit <- event .: "head_commit"
             sha <- commit .: "id"
+            message <- commit .: "message"
+            author <- commit .: "author" >>= \a -> a .: "username"
             repo <- event .: "repository" >>= \r -> r .: "full_name"
 
             pure JobHandler.CommitInfo
                 { sha = sha
+                , branch = branch
+                , message = message
+                , author = author
                 , repo = repo 
                 }
 

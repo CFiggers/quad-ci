@@ -22,9 +22,10 @@ newtype Config
 jobToJson :: BuildNumber -> JobHandler.Job -> Aeson.Value
 jobToJson number job =
     Aeson.object
-        [ ( "number", Aeson.toJSON $ Core.buildNumberToInt number) 
-        , ( "state", Aeson.toJSON $ jobStateToText job.state)
-        , ( "steps", Aeson.toJSON steps)
+        [ ( "number", Aeson.toJSON $ Core.buildNumberToInt number ) 
+        , ( "state", Aeson.toJSON $ jobStateToText job.state )
+        , ( "info", Aeson.toJSON job.info )
+        , ( "steps", Aeson.toJSON steps )
         ]
     where 
         build = case job.state of
@@ -90,7 +91,7 @@ run config handler =
                 pipeline <- Github.fetchRemotePipeline info
                 let step = Github.createCloneStep info
 
-                handler.queueJob $ pipeline 
+                handler.queueJob info $ pipeline 
                     { steps = NonEmpty.cons step pipeline.steps
                     }
 
