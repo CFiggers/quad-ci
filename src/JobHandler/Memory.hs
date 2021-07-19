@@ -36,7 +36,14 @@ createService = do
                 STM.stateTVar state dispatchCmd_
         , processMsg = \msg -> STM.atomically do
                 STM.modifyTVar' state $ processMsg_ msg
+        , fetchLogs = \number step -> STM.atomically do
+                s <- STM.readTVar state
+                pure $ fetchLogs_ number step s
         }
+
+fetchLogs_ :: BuildNumber -> StepName -> State -> Maybe ByteString
+fetchLogs_ number step state =
+    Map.lookup (number, step) state.logs
 
 dispatchCmd_ :: State -> (Maybe Agent.Cmd, State)
 dispatchCmd_ state = 
