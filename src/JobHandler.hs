@@ -31,4 +31,5 @@ data Service
         , processMsg :: Agent.Msg -> IO ()
         , findJob :: BuildNumber -> IO (Maybe Job)
         , fetchLogs :: BuildNumber -> StepName -> IO (Maybe ByteString)
+        , latestJobs :: IO [(BuildNumber, Job)]
         }
