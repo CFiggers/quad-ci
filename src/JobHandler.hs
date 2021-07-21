@@ -32,9 +32,9 @@ data CommitInfo
 data Service 
     = Service 
         { queueJob :: CommitInfo -> Pipeline -> IO BuildNumber
+        , findJob :: BuildNumber -> IO (Maybe Job)
         , dispatchCmd :: IO (Maybe Agent.Cmd)
         , processMsg :: Agent.Msg -> IO ()
-        , findJob :: BuildNumber -> IO (Maybe Job)
         , fetchLogs :: BuildNumber -> StepName -> IO (Maybe ByteString)
         , latestJobs :: IO [(BuildNumber, Job)]
         }

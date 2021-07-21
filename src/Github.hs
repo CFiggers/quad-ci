@@ -38,24 +38,44 @@ fetchRemotePipeline info = do
     res <- HTTP.httpBS req
     Yaml.decodeThrow $ HTTP.getResponseBody res
 
+-- parsePushEvent :: ByteString -> IO JobHandler.CommitInfo
+-- parsePushEvent body = do
+--     let parser = Aeson.withObject "github-webhook" $ \event -> do
+--             branch <- event .: "ref" <&> \ref ->
+--                     Text.dropPrefix "refs/heads/" ref
+            
+--             commit <- event .: "head_commit"
+--             sha <- commit .: "id"
+--             message <- commit .: "message"
+--             author <- commit .: "author" >>= \a -> a .: "username"
+--             repo <- event .: "repository" >>= \r -> r .: "full_name"
+
+--             pure JobHandler.CommitInfo
+--                     { sha = sha
+--                     , branch = branch
+--                     , message = message
+--                     , author = author
+--                     , repo = repo 
+--                     }
+
 parsePushEvent :: ByteString -> IO JobHandler.CommitInfo
 parsePushEvent body = do
     let parser = Aeson.withObject "github-webhook" $ \event -> do
             branch <- event .: "ref" <&> \ref ->
-                Text.dropPrefix "refs/heads/" ref
+                        Text.dropPrefix "refs/heads/" ref
             
             commit <- event .: "head_commit"
             sha <- commit .: "id"
             message <- commit .: "message"
             author <- commit .: "author" >>= \a -> a .: "username"
             repo <- event .: "repository" >>= \r -> r .: "full_name"
-
+            
             pure JobHandler.CommitInfo
                 { sha = sha
                 , branch = branch
                 , message = message
                 , author = author
-                , repo = repo 
+                , repo = repo
                 }
 
     let result = do

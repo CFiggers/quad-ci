@@ -13,6 +13,7 @@ import qualified RIO.NonEmpty as NonEmpty
 import qualified RIO.Map as Map
 import qualified Network.HTTP.Types as HTTP.Types
 import qualified Network.Wai.Middleware.Cors as Cors
+import qualified System.Log.Logger as Logger
 
 newtype Config
     = Config
@@ -74,15 +75,18 @@ run :: Config -> JobHandler.Service -> IO ()
 run config handler = 
     Scotty.scotty config.port do
         Scotty.middleware Cors.simpleCors
+        
         Scotty.post "/agent/pull" do
             cmd <- Scotty.liftAndCatchIO do
                 handler.dispatchCmd
             Scotty.raw $ Serialise.serialise cmd
+        
         Scotty.post "/agent/send" do
             msg <- Serialise.deserialise <$> Scotty.body
             Scotty.liftAndCatchIO do 
                 handler.processMsg msg
             Scotty.json ("message processed" :: Text)
+        
         Scotty.post "/webhook/github" do
             body <- Scotty.body
 
@@ -91,9 +95,13 @@ run config handler =
                 pipeline <- Github.fetchRemotePipeline info
                 let step = Github.createCloneStep info
 
+                -- number <- 
                 handler.queueJob info $ pipeline 
-                    { steps = NonEmpty.cons step pipeline.steps
-                    }
+                        { steps = NonEmpty.cons step pipeline.steps
+                        }
+
+                -- Logger.infoM "quad.server" $ "Queued job " <> Core.displayBuildNumber number
+                -- pure number 
 
             Scotty.json $
                 Aeson.object
@@ -124,7 +132,4 @@ run config handler =
                 handler.latestJobs
 
             Scotty.json $ jobs <&> \(number, job) -> jobToJson number job
-            
-
-
 

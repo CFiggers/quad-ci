@@ -107,6 +107,9 @@ buildHasNextStep build =
         f :: Step -> Bool
         f step = not $ Map.member step.name build.completedSteps
 
+displayBuildNumber :: BuildNumber -> String
+displayBuildNumber number = "#" <> show (buildNumberToInt number)
+
 initLogCollection :: Pipeline -> LogCollection
 initLogCollection pipeline =
     Map.fromList $ NonEmpty.toList steps
