@@ -27,7 +27,7 @@ createCloneStep info = Step
 fetchRemotePipeline :: JobHandler.CommitInfo -> IO Pipeline
 fetchRemotePipeline info = do
     endpoint <- HTTP.parseRequest "https://api.github.com"
-    let path = "/repos/" <> info.repo <> "/contents/.quad.yaml"
+    let path = "/repos/" <> info.repo <> "/contents/.quad.yml"
 
     let req = endpoint
             & HTTP.setRequestPath (encodeUtf8 path)

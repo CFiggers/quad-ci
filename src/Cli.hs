@@ -47,7 +47,7 @@ main = Butcher.mainFromCmdParserWithHelpDesc $ \helpDesc -> do
                     Butcher.paramHelpStr "Server port"
                         <> Butcher.paramDefault (show defaultPort)
 
-        Butcher.addCmdImpl do
+        Butcher.addCmdImpl $
             case readMaybe port of
                 Nothing -> throwString "Port must be a number"
                 Just p -> do 
@@ -56,6 +56,7 @@ main = Butcher.mainFromCmdParserWithHelpDesc $ \helpDesc -> do
     
     Butcher.addCmd "start-agent" do
         Butcher.addCmdSynopsis "Start agent node" 
+        
         endpoint <- Butcher.addParamString "ENDPOINT" $
                     Butcher.paramHelpStr "Server endpoint"
                         <> Butcher.paramSuggestions [defaultEndpoint]
